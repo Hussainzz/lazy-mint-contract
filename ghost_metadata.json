@@ -1,0 +1,11 @@
+{
+    "description": "Boooooo",
+    "image": "https://ipfs.io/ipfs/QmeueVyGRuTH939fPhGcPC8iF6HYhRixGBRmEgiZqFUvEW",
+    "name": "Baby Ghost",
+    "attributes": [
+        {
+            "trait_type": "cuteness",
+            "value": 100
+        }
+    ]
+}

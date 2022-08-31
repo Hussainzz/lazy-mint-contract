@@ -5,24 +5,64 @@ pragma solidity ^0.8.4;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract LazyMint is ERC721, ERC721URIStorage, Ownable, EIP712 {
-    using Counters for Counters.Counter;
+contract LazyMint is ERC721, ERC721URIStorage, Ownable, EIP712, AccessControl {
 
-    Counters.Counter private _tokenIdCounter;
+    error OnlyMinter(address to);
+    error NotEnoughValue(address to, uint256);
+    error NoFundsToWithdraw(uint256 balance);
+    error FailedToWithdraw(bool sent);
 
+    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     string private constant SIGNING_DOMAIN = "Lazy-Domain";
     string private constant SIGNING_VERSION = "1";
 
-    constructor() ERC721("LazyMint", "MTK") EIP712(SIGNING_DOMAIN, SIGNING_VERSION) {}
+    event NewMint(address indexed to, uint256 tokenId);
+    event FundsWithdrawn(address indexed owner, uint256 amount);
 
-    function safeMint(address to, string memory uri) public onlyOwner {
-        uint256 tokenId = _tokenIdCounter.current();
-        _tokenIdCounter.increment();
-        _safeMint(to, tokenId);
-        _setTokenURI(tokenId, uri);
+    struct LazyMintVoucher{
+        uint256 tokenId;
+        uint256 price;
+        string uri;
+        bytes signature;
+    }
+
+    constructor(address minter) ERC721("LazyMint", "MTK") EIP712(SIGNING_DOMAIN, SIGNING_VERSION) {
+        _setupRole(MINTER_ROLE, minter);
+    }
+    
+
+    function mintNFT(address _to, LazyMintVoucher calldata _voucher) public payable {
+        address signer = _verify(_voucher);
+        if(hasRole(MINTER_ROLE, signer)){
+            if(msg.value >= _voucher.price){
+                _safeMint(_to, _voucher.tokenId);
+                _setTokenURI(_voucher.tokenId, _voucher.uri);
+                emit NewMint(_to, _voucher.tokenId);
+            }else{
+                revert NotEnoughValue(_to, msg.value);
+            }
+        }else{
+            revert OnlyMinter(_to);
+        }
+    }
+
+    function _hash(LazyMintVoucher calldata voucher) internal view returns(bytes32){
+        return _hashTypedDataV4(keccak256(abi.encode(
+            //function selector
+            keccak256("LazyMintVoucher(uint256 tokenId,uint256 price,string uri)"),
+            voucher.tokenId,
+            voucher.price,
+            keccak256(bytes(voucher.uri))
+        )));
+    }
+
+    function _verify(LazyMintVoucher calldata voucher) internal view returns(address){
+        bytes32 digest = _hash(voucher);
+        //returns signer
+        return ECDSA.recover(digest, voucher.signature);
     }
 
     // The following functions are overrides required by Solidity.
@@ -38,5 +78,17 @@ contract LazyMint is ERC721, ERC721URIStorage, Ownable, EIP712 {
         returns (string memory)
     {
         return super.tokenURI(tokenId);
+    }
+
+    function supportsInterface(bytes4 interfaceId) public view virtual override(AccessControl, ERC721) returns (bool){
+        return ERC721.supportsInterface(interfaceId) || AccessControl.supportsInterface(interfaceId);
+    }
+
+    function withdrawFunds() public payable onlyOwner{
+        uint256 balance = address(this).balance;
+        if(balance <= 0){revert NoFundsToWithdraw(balance);}
+        (bool sent,) = msg.sender.call{value: balance}("");
+        if(!sent){revert FailedToWithdraw(sent);}
+        emit FundsWithdrawn(msg.sender, balance);
     }
 }
