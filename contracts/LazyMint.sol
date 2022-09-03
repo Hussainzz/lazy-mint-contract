@@ -5,7 +5,7 @@
     Author: SHAIKH HUSSAIN
 
     NOTE: This contracts are offered for learning purposes only, to illustrate certain aspects of development regarding web3, 
-   they are not audited of course and not for use in any production environment.
+   they are not audited and not to use in any production environment.
  */
 
 /*    __                         ________               __ 
