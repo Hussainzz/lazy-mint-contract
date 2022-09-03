@@ -105,7 +105,7 @@ contract LazyMint is ERC721, ERC721URIStorage, Ownable, EIP712, AccessControl {
         return ERC721.supportsInterface(interfaceId) || AccessControl.supportsInterface(interfaceId);
     }
 
-    function withdrawFunds() public payable onlyOwner{
+    function withdrawFunds() public onlyOwner{
         uint256 balance = address(this).balance;
         if(balance <= 0){revert NoFundsToWithdraw(balance);}
         (bool sent,) = msg.sender.call{value: balance}("");
