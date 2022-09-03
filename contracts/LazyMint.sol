@@ -1,5 +1,26 @@
 // SPDX-License-Identifier: MIT
 
+
+/* 
+    Author: SHAIKH HUSSAIN
+
+    NOTE: This contracts are offered for learning purposes only, to illustrate certain aspects of development regarding web3, 
+   they are not audited of course and not for use in any production environment.
+ */
+
+/*    __                         ________               __ 
+   / /   ____ _____  __  __   / ____/ /_  ____  _____/ /_
+  / /   / __ `/_  / / / / /  / / __/ __ \/ __ \/ ___/ __/
+ / /___/ /_/ / / /_/ /_/ /  / /_/ / / / / /_/ (__  ) /_  
+/_____/\__,_/ /___/\__, /   \____/_/ /_/\____/____/\__/  
+                  /____/                                 
+    _   ______________    
+   / | / / ____/_  __/____
+  /  |/ / /_    / / / ___/
+ / /|  / __/   / / (__  ) 
+/_/ |_/_/     /_/ /____/  
+ */
+
 pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
