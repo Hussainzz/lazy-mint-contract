@@ -58,3 +58,5 @@ This will create file in `/lazymintdapp/src/NFTVouchers.json`
 ```
 ## [Lazy NFTs Dapp readme](https://github.com/Hussainzz/lazy-mint-contract/tree/main/lazymintdapp#readme)
 
+
+<img src="https://user-images.githubusercontent.com/13753141/188255178-bfc2507f-faee-4a4b-93f6-ac6cca3cab01.png" width="800" height="500">
