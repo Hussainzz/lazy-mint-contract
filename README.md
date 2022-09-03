@@ -1,8 +1,14 @@
 
-# Lazy Ghost NTFs
+# Lazy Ghost NTFs 
 
+## Demo
+My full article explaining lazy minting can be found on https://dev.to
 
+https://dev.to/hussainzz/lazy-minting-nft-solidity-hardhat-30l1
 
+[https://dev.to/hussainzz](https://dev.to/hussainzz)
+
+Dapp [https://ghost-mint-57sbttrch-hussainzz.vercel.app/](https://ghost-mint-57sbttrch-hussainzz.vercel.app/)
 
 ## Installation
 
