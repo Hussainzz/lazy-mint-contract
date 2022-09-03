@@ -5,7 +5,7 @@ const fs = require("fs");
 const path = require("path");
 
 const PRICE = ethers.utils.parseEther("0.1");
-const TOTAL_NFT_VOUCHERS = 5;
+const TOTAL_NFT_VOUCHERS = 30;
 
 const createSalesOrder = async () => {
     const [signer] = await ethers.getSigners();
@@ -44,7 +44,7 @@ const createSalesOrder = async () => {
 
     if(salesOrders.length){
        try {
-        fs.writeFileSync(path.join(__dirname, '../NFTVouchers.json'), JSON.stringify(salesOrders));
+        fs.writeFileSync(path.join(__dirname, '../lazymintdapp/src/NFTVouchers.json'), JSON.stringify(salesOrders));
        } catch (error) {
         console.log(error);
         
